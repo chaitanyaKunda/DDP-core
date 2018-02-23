@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- parent>
+        <groupId>com.agility.ddp</groupId>
+        <artifactId>ddp</artifactId>
+        <version>0.1.0.BUILD-SNAPSHOT</version>
+    </parent-->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.agility.ddp.core</groupId>
+    <artifactId>core</artifactId>
+    <packaging>jar</packaging>
+    <!-- <version>0.1.0.BUILD-SNAPSHOT</version> -->
+<!--<version>3.0.0.BUILD-SNAPSHOT</version> -->
+	<version>9.3.0</version> 
+    <name>core</name>
+    <properties>
+        <aspectj.version>1.8.4</aspectj.version>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <roo.version>1.2.4.RELEASE</roo.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
+         <logback.version>1.1.1</logback.version>
+        <spring-security.version>3.1.0.RELEASE</spring-security.version>
+<!--         <quartz.version>1.8.5</quartz.version> -->
+<!-- 		 <quartz.version>2.1.7</quartz.version> -->
+		<quartz.version>2.2.1</quartz.version>
+    </properties>
+    <repositories>
+        <repository>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+        <repository>
+            <id>spring-roo-repository</id>
+            <name>Spring Roo Repository</name>
+            <url>http://spring-roo-repository.springsource.org/release</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-roo-repository</id>
+            <name>Spring Roo Repository</name>
+            <url>http://spring-roo-repository.springsource.org/release</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <dependencies>
+        <!-- General dependencies for standard applications -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+         <!-- COMMENTED OUT SLF4J-LOG4J, SLF4J WILL USE LOGBACK INSTEAD -->
+        <!-- <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency> -->
+        <!-- LOGBACK Dependency -->
+        <dependency>
+        	<groupId>ch.qos.logback</groupId>
+        	<artifactId>logback-classic</artifactId>
+        	<version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.flexjson</groupId>
+            <artifactId>flexjson</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <!-- ROO dependencies -->
+        <dependency>
+            <groupId>org.springframework.roo</groupId>
+            <artifactId>org.springframework.roo.annotations</artifactId>
+            <version>${roo.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        
+        <!-- MAVEN ERROR FIX to resolve "error can't determine superclass of missing type org.springframework.transaction.interceptor.TransactionAspectSupport" -->
+        
+        <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		
+		<!-- MAVEN ERROR FIX required for Aspect weaving -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+<!--             <artifactId>hibernate-jpa-2.0-api</artifactId> -->
+<!--             <version>1.0.1.Final</version> -->
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+        </dependency>
+        <!-- spring 4.*.* require below jar -->
+        <dependency>
+		    <groupId>javax.cache</groupId>
+		    <artifactId>cache-api</artifactId>
+		    <version>1.0.0</version>
+		</dependency>
+		<!--  spring context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.1.0.RELEASE</version>
+		</dependency>
+        <!-- DDP dependency -->
+        <dependency>
+            <groupId>com.agility.ddp.data</groupId>
+            <artifactId>data</artifactId>
+<!--        <version>0.1.0.BUILD-SNAPSHOT</version> -->
+            <version>9.3.0</version>
+        </dependency>
+        
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		
+		<!-- Quartz framework -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.quartz-scheduler</groupId> -->
+<!-- 			<artifactId>quartz</artifactId> -->
+<!-- 			<version>${quartz.version}</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+		   <groupId>org.quartz-scheduler</groupId>
+		   <artifactId>quartz</artifactId>
+		   <version>${quartz.version}</version>
+		 </dependency>
+		 <dependency>
+		   <groupId>org.quartz-scheduler</groupId>
+		   <artifactId>quartz-jobs</artifactId>
+		   <version>${quartz.version}</version>
+		 </dependency>
+<!-- 		 
+		  <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz_scheduler</artifactId>
+            <version>1.0</version>
+          </dependency> 
+		-->
+		<!--  Documentum dependencies -->
+		
+		<dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>ctsTransform</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+     	 
+     	 <dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>configservice-api</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+     	 
+     	 <dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>configservice-impl</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+     	 
+		<dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>dfc</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+     	 	<dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>certjFIPS</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+		 	<dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>jsafeFIPS</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+		<!--  mail dependency -->
+		  <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <!-- JDBC-ODBC  jar -->
+     	 <dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>jdbc</artifactId>
+	         <version>1.0</version>
+     	 </dependency>
+     	  <!-- JDBC Jar to connect DB2 -->
+     	  <dependency>
+	         <groupId>com.agility</groupId>
+	         <artifactId>jt400</artifactId>
+	         <version>6.4</version>
+     	 </dependency>
+     	 <!-- FTP -->
+     	<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>oro</groupId>
+			<artifactId>oro</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<!-- UNC -->
+		<dependency>
+			<groupId>jcifs</groupId>
+			<artifactId>jcifs</artifactId>
+			<version>1.3.17</version>
+		</dependency>
+		<!-- SFTP -->
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.53</version>
+		</dependency>
+		<!-- Encryption Libraries -->
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+		<!-- http://mvnrepository.com/artifact/commons-configuration/commons-configuration -->
+		<dependency>
+		    <groupId>commons-configuration</groupId>
+		    <artifactId>commons-configuration</artifactId>
+		    <version>1.10</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<!-- Used for code coverage -->
+		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+		<dependency>
+		    <groupId>org.jacoco</groupId>
+		    <artifactId>jacoco-maven-plugin</artifactId>
+		    <version>0.7.7.201606060606</version>
+		</dependency>
+				
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <!-- <configuration> <webXml>target/web.xml</webXml> </configuration> -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.4</version> <!-- NB: do not use 1.3 or 1.3.x due to MASPECTJ-90 issue  -->
+                <dependencies>
+                    <!-- NB: You must use Maven 2.0.9 or above or these are ignored (see MNG-2972) -->
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outxml>true</outxml>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-aspects</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!--
+                      Aspects in src/main/java and src/main/aspects are added as default in the 
+                      compile goal.
+                      Aspects in src/test/java and src/test/aspects are added as default in the 
+                      test-compile goal.
+                      Aspects in src/main/java are added in the test-compile goal 
+                      if weaveWithAspectsInMainSourceFolder is set to true
+                    -->
+                    <weaveWithAspectsInMainSourceFolder>false</weaveWithAspectsInMainSourceFolder>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <printSummary>false</printSummary>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <excludes>
+                        <exclude>**/*_Roo_*</exclude>
+                    </excludes>
+                    <!-- Sets the VM argument line used when unit tests are run. -->
+			        <argLine>${surefireArgLine}</argLine>
+			        <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+			        <skipTests>${skip.unit.tests}</skipTests>
+			        <!-- Excludes integration tests when unit tests are run. -->
+			        <excludes>
+			            <exclude>**/IT*.java</exclude>
+			        </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-shade-plugin</artifactId>
+			  <version>2.4.3</version>
+			  <executions>
+			    <execution>
+			      <id>build-first</id>
+			      <phase>package</phase>
+			      <goals>
+			         <goal>shade</goal>
+			      </goals>   
+			      <configuration>
+			      <shadedArtifactAttached>true</shadedArtifactAttached>
+			      <shadedClassifierName>base</shadedClassifierName>
+			      	<transformers>
+			            <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+			                <resource>applicationContext-coreddp.xml</resource>
+			             </transformer>
+			         </transformers>
+			         <artifactSet>
+<!-- 						  <includes> -->
+<!-- 						    <include>org.apache.maven:*</include> -->
+<!-- 						  </includes> -->
+			                <excludes>
+			                	<exclude>org.apache.*:*:*</exclude>
+			                	<exclude>org.*:*:*</exclude>
+			                	<exclude>backport-util-concurrent:backport-util-concurrent:*</exclude>
+			                	<exclude>xerces:xercesImpl:*</exclude>
+			                	<exclude>xml-apis:xml-apis:*</exclude>
+			                	<exclude>commons-*:*:*</exclude>
+			                	<exclude>classworlds:classworlds:*</exclude>
+							   	<exclude>log4j:log4j:jar:*</exclude>
+								<exclude>org.slf4j:slf4j-api:jar:*</exclude>
+								<exclude>org.slf4j:jcl-over-slf4j:jar:*</exclude>
+								<exclude>ch.qos.logback:logback-classic:jar:*</exclude>
+								<exclude>ch.qos.logback:logback-core:jar:*</exclude>
+								<exclude>org.aspectj:aspectjrt:jar:*</exclude>
+								<exclude>org.aspectj:aspectjweaver:jar:*</exclude>
+								<exclude>net.sf.flexjson:flexjson:jar:*</exclude>
+								<exclude>org.apache.commons:commons-lang3:jar:*</exclude>
+								<exclude>org.springframework:spring-core:jar:*</exclude>
+								<exclude>org.springframework:spring-context:jar:*</exclude>
+								<exclude>org.springframework:spring-beans:jar:*</exclude>
+								<exclude>org.springframework:spring-expression:jar:*</exclude>
+								<exclude>org.springframework:spring-aop:jar:*</exclude>
+								<exclude>aopalliance:aopalliance:jar:*</exclude>
+								<exclude>org.springframework:spring-aspects:jar:*</exclude>
+								<exclude>org.springframework:spring-tx:jar:*</exclude>
+								<exclude>org.hibernate.javax.persistence:hibernate-jpa-2.1-api:jar:*</exclude>
+								<exclude>javax.cache:cache-api:jar:*</exclude>
+								<exclude>org.springframework:spring-context-support:jar:*</exclude>
+								<exclude>com.agility.ddp.data:data:jar:*</exclude>
+								<exclude>org.slf4j:slf4j-log4j12:jar:*</exclude>
+								<exclude>net.sourceforge.jtds:jtds:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-core:jar:*</exclude>
+								<exclude>antlr:antlr:jar:*</exclude>
+								<exclude>org.jboss.logging:jboss-logging:jar:*</exclude>
+								<exclude>dom4j:dom4j:jar:*</exclude>
+								<exclude>org.jboss.spec.javax.transaction:jboss-transaction-api_1.1_spec:jar:*</exclude>
+								<exclude>org.hibernate.common:hibernate-commons-annotations:jar:*</exclude>
+								<exclude>org.javassist:javassist:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-entitymanager:jar:*</exclude>
+								<exclude>org.hibernate.javax.persistence:hibernate-jpa-2.0-api:jar:*</exclude>
+								<exclude>commons-collections:commons-collections:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-validator:jar:*</exclude>
+								<exclude>javax.validation:validation-api:jar:*</exclude>
+								<exclude>org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:jar:*</exclude>
+								<exclude>org.springframework:spring-jdbc:jar:*</exclude>
+								<exclude>org.springframework:spring-orm:jar:*</exclude>
+								<exclude>commons-pool:commons-pool:jar:*</exclude>
+								<exclude>commons-dbcp:commons-dbcp:jar:*</exclude>
+								<exclude>org.springframework.data:spring-data-jpa:jar:*</exclude>
+								<exclude>org.springframework.data:spring-data-commons-core:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-core:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-crypto:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-config:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-web:jar:*</exclude>
+								<exclude>org.springframework:spring-web:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-taglibs:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-acl:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-ldap:jar:*</exclude>
+								<exclude>org.springframework.ldap:spring-ldap-core:jar:*</exclude>
+								<exclude>commons-lang:commons-lang:jar:*</exclude>
+								<exclude>org.quartz-scheduler:quartz:jar:*</exclude>
+								<exclude>c3p0:c3p0:jar:*</exclude>
+								<exclude>com.agility:ctsTransform:jar:*</exclude>
+								<exclude>com.agility:configservice-api:jar:*</exclude>
+								<exclude>com.agility:configservice-impl:jar:*</exclude>
+								<exclude>com.agility:dfc:jar:*</exclude>
+								<exclude>com.agility:certjFIPS:jar:*</exclude>
+								<exclude>com.agility:jsafeFIPS:jar:*</exclude>
+								<exclude>javax.mail:mail:jar:*</exclude>
+								<exclude>javax.activation:activation:jar:*</exclude>
+								<exclude>com.agility:jdbc:jar:*</exclude>
+								<exclude>com.agility:jt400:jar:*</exclude>
+								<exclude>commons-net:commons-net:jar:*</exclude>
+								<exclude>oro:oro:jar:*</exclude>
+								<exclude>jcifs:jcifs:jar:*</exclude>
+								<exclude>com.jcraft:jsch:jar:*</exclude>
+								<exclude>org.jasypt:jasypt:jar:*</exclude>
+								<exclude>commons-configuration:commons-configuration:jar:*</exclude>
+								<exclude>com.google.code.gson:gson:jar:*</exclude>
+								<exclude>org.jacoco:jacoco-maven-plugin:jar:*</exclude>
+							 </excludes>
+			              </artifactSet>
+			          <finalName>${artifactId}-base-${version}</finalName>
+			      </configuration>        
+			    </execution>
+			    <execution>
+			      <id>build-second</id>
+			      <phase>package</phase>
+			      <goals>
+			         <goal>shade</goal>
+			      </goals>   
+			      <configuration>
+			      		<shadedArtifactAttached>true</shadedArtifactAttached>
+			      		<shadedClassifierName>ddp</shadedClassifierName>
+			        	<transformers>
+			            <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+			                <resource>applicationContext.xml</resource>
+			             </transformer>
+			         </transformers>
+			         <artifactSet>
+<!-- 			         	  <includes> -->
+<!-- 						    <include>org.apache.maven:*</include> -->
+<!-- 						  </includes> -->
+			                <excludes>
+			                	<exclude>org.apache.*:*:*</exclude>
+			                	<exclude>org.*:*:*</exclude>
+			                	<exclude>backport-util-concurrent:backport-util-concurrent:*</exclude>
+			                	<exclude>xerces:xercesImpl:*</exclude>
+			                	<exclude>xml-apis:xml-apis:*</exclude>
+			                	<exclude>commons-*:*:*</exclude>
+			                	<exclude>classworlds:classworlds:*</exclude>
+							   	<exclude>log4j:log4j:jar:*</exclude>
+								<exclude>org.slf4j:slf4j-api:jar:*</exclude>
+								<exclude>org.slf4j:jcl-over-slf4j:jar:*</exclude>
+								<exclude>ch.qos.logback:logback-classic:jar:*</exclude>
+								<exclude>ch.qos.logback:logback-core:jar:*</exclude>
+								<exclude>org.aspectj:aspectjrt:jar:*</exclude>
+								<exclude>org.aspectj:aspectjweaver:jar:*</exclude>
+								<exclude>net.sf.flexjson:flexjson:jar:*</exclude>
+								<exclude>org.apache.commons:commons-lang3:jar:*</exclude>
+								<exclude>org.springframework:spring-core:jar:*</exclude>
+								<exclude>org.springframework:spring-context:jar:*</exclude>
+								<exclude>org.springframework:spring-beans:jar:*</exclude>
+								<exclude>org.springframework:spring-expression:jar:*</exclude>
+								<exclude>org.springframework:spring-aop:jar:*</exclude>
+								<exclude>aopalliance:aopalliance:jar:*</exclude>
+								<exclude>org.springframework:spring-aspects:jar:*</exclude>
+								<exclude>org.springframework:spring-tx:jar:*</exclude>
+								<exclude>org.hibernate.javax.persistence:hibernate-jpa-2.1-api:jar:*</exclude>
+								<exclude>javax.cache:cache-api:jar:*</exclude>
+								<exclude>org.springframework:spring-context-support:jar:*</exclude>
+								<exclude>com.agility.ddp.data:data:jar:*</exclude>
+								<exclude>org.slf4j:slf4j-log4j12:jar:*</exclude>
+								<exclude>net.sourceforge.jtds:jtds:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-core:jar:*</exclude>
+								<exclude>antlr:antlr:jar:*</exclude>
+								<exclude>org.jboss.logging:jboss-logging:jar:*</exclude>
+								<exclude>dom4j:dom4j:jar:*</exclude>
+								<exclude>org.jboss.spec.javax.transaction:jboss-transaction-api_1.1_spec:jar:*</exclude>
+								<exclude>org.hibernate.common:hibernate-commons-annotations:jar:*</exclude>
+								<exclude>org.javassist:javassist:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-entitymanager:jar:*</exclude>
+								<exclude>org.hibernate.javax.persistence:hibernate-jpa-2.0-api:jar:*</exclude>
+								<exclude>commons-collections:commons-collections:jar:*</exclude>
+								<exclude>org.hibernate:hibernate-validator:jar:*</exclude>
+								<exclude>javax.validation:validation-api:jar:*</exclude>
+								<exclude>org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:jar:*</exclude>
+								<exclude>org.springframework:spring-jdbc:jar:*</exclude>
+								<exclude>org.springframework:spring-orm:jar:*</exclude>
+								<exclude>commons-pool:commons-pool:jar:*</exclude>
+								<exclude>commons-dbcp:commons-dbcp:jar:*</exclude>
+								<exclude>org.springframework.data:spring-data-jpa:jar:*</exclude>
+								<exclude>org.springframework.data:spring-data-commons-core:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-core:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-crypto:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-config:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-web:jar:*</exclude>
+								<exclude>org.springframework:spring-web:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-taglibs:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-acl:jar:*</exclude>
+								<exclude>org.springframework.security:spring-security-ldap:jar:*</exclude>
+								<exclude>org.springframework.ldap:spring-ldap-core:jar:*</exclude>
+								<exclude>commons-lang:commons-lang:jar:*</exclude>
+								<exclude>org.quartz-scheduler:quartz:jar:*</exclude>
+								<exclude>c3p0:c3p0:jar:*</exclude>
+								<exclude>com.agility:ctsTransform:jar:*</exclude>
+								<exclude>com.agility:configservice-api:jar:*</exclude>
+								<exclude>com.agility:configservice-impl:jar:*</exclude>
+								<exclude>com.agility:dfc:jar:*</exclude>
+								<exclude>com.agility:certjFIPS:jar:*</exclude>
+								<exclude>com.agility:jsafeFIPS:jar:*</exclude>
+								<exclude>javax.mail:mail:jar:*</exclude>
+								<exclude>javax.activation:activation:jar:*</exclude>
+								<exclude>com.agility:jdbc:jar:*</exclude>
+								<exclude>com.agility:jt400:jar:*</exclude>
+								<exclude>commons-net:commons-net:jar:*</exclude>
+								<exclude>oro:oro:jar:*</exclude>
+								<exclude>jcifs:jcifs:jar:*</exclude>
+								<exclude>com.jcraft:jsch:jar:*</exclude>
+								<exclude>org.jasypt:jasypt:jar:*</exclude>
+								<exclude>commons-configuration:commons-configuration:jar:*</exclude>
+								<exclude>com.google.code.gson:gson:jar:*</exclude>
+								<exclude>org.jacoco:jacoco-maven-plugin:jar:*</exclude>
+							 </excludes>
+			              </artifactSet>
+			        <finalName>${artifactId}-ddp-${version}</finalName>
+			      </configuration>  
+			    </execution>
+			  </executions>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <!-- IDE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.7</version>  <!-- Note 2.8 does not work with AspectJ aspect path -->
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>false</downloadJavadocs>
+                    <wtpversion>2.0</wtpversion>
+                    <additionalBuildcommands>
+                        <buildCommand>
+                            <name>org.eclipse.ajdt.core.ajbuilder</name>
+                            <arguments>
+                                <aspectPath>org.springframework.aspects</aspectPath>
+                            </arguments>
+                        </buildCommand>
+                        <buildCommand>
+                            <name>org.springframework.ide.eclipse.core.springbuilder</name>
+                        </buildCommand>
+                    </additionalBuildcommands>
+                    <additionalProjectnatures>
+                        <projectnature>org.eclipse.ajdt.ui.ajnature</projectnature>
+                        <projectnature>com.springsource.sts.roo.core.nature</projectnature>
+                        <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+                    </additionalProjectnatures>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <dependenciesAsLibraries>true</dependenciesAsLibraries>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <version>1.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.4.v20120524</version>
+                <configuration>
+                    <webAppConfig>
+                        <contextPath>/${project.name}</contextPath>
+                    </webAppConfig>
+                </configuration>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+                <packagingExcludes>${basedir}/src/main/resources/META-INF/spring/applicationContext-coreddp.xml</packagingExcludes>
+            </configuration>
+        </plugin>
+        	<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.7.5.201505241946</version>
+			    <executions>
+			        <!--
+			            Prepares the property pointing to the JaCoCo runtime agent which
+			            is passed as VM argument when Maven the Surefire plugin is executed.
+			        -->
+			        <execution>
+			            <id>pre-unit-test</id>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			            <configuration>
+			                <!-- Sets the path to the file which contains the execution data. -->
+			                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+			                <!--
+			                    Sets the name of the property containing the settings
+			                    for JaCoCo runtime agent.
+			                -->
+			                <propertyName>surefireArgLine</propertyName>
+			            </configuration>
+			        </execution>
+			        <!--
+			            Ensures that the code coverage report for unit tests is created after
+			            unit tests have been run.
+			        -->
+			        <execution>
+			            <id>post-unit-test</id>
+			            <phase>test</phase>
+			            <goals>
+			                <goal>report</goal>
+			            </goals>
+			            <configuration>
+			                <!-- Sets the path to the file which contains the execution data. -->
+			                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+			                <!-- Sets the output directory for the code coverage report. -->
+			                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+			            </configuration>
+			        </execution>
+			        <execution>
+				    <id>jacoco-check</id>
+				    <phase>test</phase>
+				    <goals>
+				        <goal>check</goal>
+				    </goals>
+				    <configuration>
+				        <rules>
+				            <rule implementation="org.jacoco.maven.RuleConfiguration">
+				                <element>BUNDLE</element>
+				                <limits>
+				                    <limit implementation="org.jacoco.report.check.Limit">
+				                        <counter>INSTRUCTION</counter>
+				                        <value>COVEREDRATIO</value>
+				                        <minimum>0.60</minimum>
+				                    </limit>
+				                </limits>
+				            </rule>
+				        </rules>
+				    </configuration>
+				</execution>
+			    </executions>
+			</plugin>
+			
+        </plugins>
+        
+      </build>
+      
+  
+  	
+</project>

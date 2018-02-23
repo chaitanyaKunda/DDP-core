@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	 xmlns:task="http://www.springframework.org/schema/task"
+ 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+      	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+	<!-- This will automatically locate any and all property files you have 
+		within your classpath, provided they fall under the META-INF/spring directory. 
+		The located property files are parsed and their values can then be used within 
+		application context files in the form of ${propertyKey}. -->
+	<context:property-placeholder location="classpath*:META-INF/spring/*.properties"
+		order="1" ignore-unresolvable="true" />
+	<context:annotation-config/>
+	<!-- <context:property-placeholder location="classpath*:ddp.properties" 
+		order="2" ignore-unresolvable="true"/> -->
+	<bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:ddp.properties</value>
+				<value>classpath*:dfc.properties</value>
+				<value>classpath*:custom.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="order" value="2" />
+		<!-- <property name="properties" ref="CommonsConfigurationFactoryBean"/> -->
+	</bean>
+	<util:properties  id="quartzProperties" location="classpath*:quartz.properties"/>
+	
+	<!-- <bean name="CommonsConfigurationFactoryBean" class="org.springmodules.commons.configuration.CommonsConfigurationFactoryBean"> 
+		<constructor-arg ref="DatabaseProperties"/> </bean> <bean name="DatabaseProperties" 
+		class="org.apache.commons.configuration.DatabaseConfiguration"> <constructor-arg 
+		type="javax.sql.DataSource" ref="dataSource"/> <constructor-arg index="1" 
+		value="DDPDevDB"/> <constructor-arg index="2" value="PRO_KEY"/> <constructor-arg 
+		index="3" value="PRO_VALUE"/> </bean> -->
+
+	<!-- PlatformTransactionManager which are going to be used for transaction -->
+	<!-- Assuming dataSource obtained from Data module applicationContext.xml -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- task util -->
+
+	<bean id="taskUtil" class="com.agility.ddp.core.util.TaskUtil"> </bean> 
+	<bean id="ruleJob" class="com.agility.ddp.core.quartz.RuleJob">	
+		<property name="controlJdbcTemplate" ref="controlJdbcTemplate"></property>
+	</bean>
+		
+	<!-- Quartz details -->
+
+	<!-- Rule details -->
+	<bean id="ddpDummyRuleChecking" class="com.agility.ddp.core.rule.DdpDummyRuleChecking" />
+	<bean id="ddpAedRuleCheking" class="com.agility.ddp.core.rule.DdpAedRuleCheking" />
+	<bean id="ddpExportRuleChecking" class="com.agility.ddp.core.rule.DdpExportRuleChecking" />
+	<bean id="ddpMultiAedRuleChecking" class="com.agility.ddp.core.rule.DdpMultiAedRuleChecking" />
+
+	<!-- <bean id="ddpCommEmailService" class="com.agility.ddp.data.domain.DdpCommEmailService" 
+		/> <bean id="ddpCategorizedDocsService" class="com.agility.ddp.data.domain.DdpCategorizedDocsService" 
+		/> -->
+
+	<!-- Taks details -->
+
+	<!-- <bean id="ruleJob" class="com.agility.ddp.core.quartz.RuleJob">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean> -->
+
+	<bean id="ddpCategorizationTask" class="com.agility.ddp.core.task.DdpCategorizationTask">
+		<property name="ruleDataAsList">
+			<list>
+				<ref bean="ddpDummyRuleChecking" />
+				<ref bean="ddpAedRuleCheking" />
+				<ref bean="ddpExportRuleChecking" />
+				<ref bean="ddpMultiAedRuleChecking" />
+			</list>
+		</property>
+		<property name="transactionManager" ref="transactionManager"></property>
+	</bean>
+	<bean id="ddpUpdateMetadataTask" class="com.agility.ddp.core.task.DdpUpdateMetadataTask">
+		<property name="ruleDataAsList">
+			<list>
+				<ref bean="ddpDummyRuleChecking" />
+				<ref bean="ddpAedRuleCheking" />
+				<ref bean="ddpExportRuleChecking" />
+				<ref bean="ddpMultiAedRuleChecking"/>
+			</list>
+		</property>
+		<property name="platformTransactionManager" ref="transactionManager"></property>
+	</bean>
+	<bean id="ddpInitiateProcessTask" class="com.agility.ddp.core.task.DdpInitiateProcessTask">
+		<property name="ruleDataAsList">
+			<list>
+				<ref bean="ddpDummyRuleChecking" />
+				<ref bean="ddpAedRuleCheking" />
+				<ref bean="ddpExportRuleChecking" />
+				<ref bean="ddpMultiAedRuleChecking" />
+			</list>
+		</property>
+		<property name="platformTransactionManager" ref="transactionManager"></property>
+	</bean>
+	<!-- Task for creating Scheduler at system starting -->
+	<bean id="ddpCreateSchedulerTask" class="com.agility.ddp.core.task.DdpCreateSchedulerTask">
+	</bean>
+	
+	<bean id="ddpCreateMultiAedSchedulerTask" class="com.agility.ddp.core.task.DdpCreateMultiAedSchedulerTask"></bean>
+	<bean id="ddpAedDailySLASchedulerTask" class="com.agility.ddp.core.task.DdpAedDailySLASchedulerTask"></bean>
+	<bean id="ddpAedWeeklySLASchedulerTask" class="com.agility.ddp.core.task.DdpAedWeeklySLASchedulerTask"></bean>
+	<bean id="ddpAedMonthlySLASchedulerTask" class="com.agility.ddp.core.task.DdpAedMonthlySLASchedulerTask"></bean>
+
+	<!-- Categorization Job details -->
+	<bean name="ddpCategorizationJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpCategorizationJob" />
+		<property name="name" value="DdpCategorizationJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpCategorizationTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- Update Metadata Job details -->
+	<bean name="ddpUpdateMetadataJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpUpdateMetadataJob" />
+		<property name="name" value="DdpUpdateMetadataJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpUpdateMetadataTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- Initiate Process Job details -->
+	<bean name="ddpInitiateProcessJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpInitiateProcessJob" />
+		<property name="name" value="DdpInitiateProcessJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpInitiateProcessTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+
+	<!-- Create Scheduler Job Details -->
+	<bean name="ddpCreateSchedulerJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpCreateSchedulerJob" />
+		<property name="name" value="DdpCreateSchedulerJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpCreateSchedulerTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+
+
+
+	<!-- Create Scheduler Job Details -->
+	<bean name="ddpCreateMultiAedSchedulerJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpCreateMultiAedSchedulerJob" />
+		<property name="name" value="DdpCreateMultiAedSchedulerJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpCreateMultiAedSchedulerTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Create AED Daily SLA Scheduler Job Details -->
+	<bean name="ddpAedDailySlASchedulerJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpAedDailySLASchedulerJob" />
+		<property name="name" value="DdpAedDailySLASchedulerJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpAedDailySLASchedulerTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Create AED Weekly Scheduler Job Details -->
+	<bean name="ddpAedWeeklySLASchedulerJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpAedWeeklySLASchedulerJob" />
+		<property name="name" value="DdpAedWeeklySLASchedulerJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpAedWeeklySLASchedulerTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Create AED Monthly SLA Scheduler Job Details -->
+	<bean name="ddpAedMonthlySLASchedulerJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass"
+			value="com.agility.ddp.core.quartz.DdpAedMonthlySLASchedulerJob" />
+		<property name="name" value="DdpAedMonthlySLASchedulerJob" />
+		<property name="group" value="com.agility.ddp.core.quartz" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="task" value-ref="ddpAedMonthlySLASchedulerTask" />
+				<entry key="type" value="FULL" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Trigger Job details -->
+	<bean id="categorizationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="ddpCategorizationJob" />
+		<!-- 10 seconds -->
+		<property name="startDelay" value="10000" />
+		<!-- repeat every 2 minutes -->
+		<property name="repeatInterval" value="120000" />
+	</bean>
+
+	<bean id="updateMetadataTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="ddpUpdateMetadataJob" />
+		<!-- 5 minutes and 10 seconds -->
+		<property name="startDelay" value="310000" />
+		<!-- repeat every 2 minutes 30 seconds -->
+		<property name="repeatInterval" value="150000" />
+	</bean>
+
+	<bean id="initiateProcessTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="ddpInitiateProcessJob" />
+		<!-- 10 minutes and 10 seconds -->
+		<property name="startDelay" value="610000" />
+		<!-- repeat every 2 minutes -->
+		<property name="repeatInterval" value="120000" />
+	</bean>
+	
+	<!-- Creating Scheduler will be triggered only once at system starting -->
+	<bean id="createSchedulerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="ddpCreateSchedulerJob" />
+		<!-- 5 seconds -->
+		<property name="startDelay" value="5000" />
+		<!-- 1 time trigger -->
+		<property name="repeatCount" value="0" />
+	</bean>
+	
+	
+		<!-- Creating Scheduler will be triggered only once at system starting -->
+	<bean id="createMultiAedSchedulerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="ddpCreateMultiAedSchedulerJob" />
+		<!-- 10 seconds -->
+		<property name="startDelay" value="20000" />
+		<!-- 1 time trigger -->
+		<property name="repeatCount" value="0" />
+	</bean>
+	
+	<bean id="aedDailySLASchedulerTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="ddpAedDailySlASchedulerJob" />
+	    <property name="cronExpression" value="0 0 0 * * ?" />
+	</bean>
+
+	<bean id="aedWeeklySLASchedulerTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="ddpAedWeeklySLASchedulerJob" />
+	    <property name="cronExpression" value="0 0 0 ? * 2" />
+	</bean>
+	
+	<bean id="aedMonthlySLASchedulerTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="ddpAedMonthlySLASchedulerJob" />
+	    <property name="cronExpression" value="0 0 0 1 * ?" />
+	</bean>
+	
+	<!-- Scheduler for Daily SLA Notification in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="AEDDailySLAScheduler Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="aedDailySLASchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<!-- Scheduler for Weekly SLA Notification in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="AEDWeeklySLAScheduler Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="aedWeeklySLASchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<!-- Scheduler for Monthly SLA Notification in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="AEDMonthlySLAScheduler Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="aedMonthlySLASchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+
+		<!-- Scheduler for Export Rules   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="CreateSchedulerExport Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="createSchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+	<!-- Scheduler for Categorization in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="Categorization Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="categorizationTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+		<!-- Scheduler for UpdateMetadata in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="UpdateMetadata Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="updateMetadataTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+		<!-- Scheduler for InitiateProcess in AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="InitiateProcess Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="initiateProcessTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+		<!-- Scheduler for CreateMultiAedScheduler in Consolidated AED   -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="schedulerName" value="CreateMultiAedScheduler Job"/> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="createMultiAedSchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="categorizationTrigger" /> -->
+<!-- 				<ref bean="updateMetadataTrigger" />  -->
+<!-- 				<ref bean="initiateProcessTrigger" />  -->
+<!-- 			 	<ref bean="createSchedulerTrigger" /> -->
+<!-- 				<ref bean="createMultiAedSchedulerTrigger" /> -->
+<!-- 				<ref bean="aedDailySLASchedulerTrigger" /> -->
+<!-- 				<ref bean="aedWeeklySLASchedulerTrigger" /> -->
+<!-- 				<ref bean="aedMonthlySLASchedulerTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+	 <!--    <property name="quartzProperties">
+        <props>
+            <prop key="org.quartz.scheduler.instanceName">DefaultQuartzScheduler</prop>
+            <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+ 
+            <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+            <prop key="org.quartz.threadPool.threadCount">3</prop>
+            <prop key="org.quartz.threadPool.threadPriority">5</prop>
+ 
+            <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+ 
+            <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+            <prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.MSSQLDelegate</prop>
+            <prop key="org.quartz.jobStore.useProperties">false</prop>
+            <prop key="org.quartz.jobStore.dataSource">myDS</prop>
+            <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+ 
+            <prop key="org.quartz.jobStore.isClustered">true</prop>
+            <prop key="org.quartz.jobStore.clusterCheckinInterval">10000</prop>
+ 
+            <prop key="org.quartz.dataSource.myDS.driver">net.sourceforge.jtds.jdbc.Driver</prop>
+            <prop key="org.quartz.dataSource.myDS.URL">jdbc:jtds:sqlserver://10.138.77.80:1433/DDPDevDB</prop>
+            <prop key="org.quartz.dataSource.myDS.user">DDPDevAdmin</prop>
+            <prop key="org.quartz.dataSource.myDS.password">Dev@dm!n009</prop>
+            <prop key="org.quartz.dataSource.myDS.maxConnections">5</prop>
+            <prop key="org.quartz.dataSource.myDS.validationQuery">SELECT GETDATE()</prop>
+        </props>
+        </property>  -->
+<!-- 	</bean> -->
+
+<!-- 	 <bean id="reprocess" class="com.agility.ddp.core.quartz.DdpReprocessJob"></bean> -->
+<!-- 	 <bean id="multiAedReprocess" class="com.agility.ddp.core.quartz.DdpMultiAedReprocessJob"></bean> -->
+
+</beans>
